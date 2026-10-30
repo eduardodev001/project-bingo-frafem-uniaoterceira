@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telão - Bingo Comunitário</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/telao.css">
+</head>
+<body>
+  <div class="bandeirinhas" aria-hidden="true"></div>
+  <div id="faixaExtra" class="faixa-extra" hidden></div>
+
+  <header class="cabecalho">
+    <img id="banner" class="banner" alt="Banner do evento" hidden>
+    <div class="titulos">
+      <h1 id="nomeEvento">Bingo Comunitário</h1>
+      <p id="subtitulo">Em prol da nossa comunidade</p>
+    </div>
+    <div class="rodada-info">
+      <span class="rotulo">Rodada</span>
+      <span id="numeroRodada" class="valor">-</span>
+      <span id="premioRodada" class="premio"></span>
+    </div>
+  </header>
+
+  <main class="palco">
+    <!-- Bola gigante do último número -->
+    <section class="lado-bola" aria-live="polite">
+      <div id="bolaGigante" class="bola gigante vazia">
+        <div class="janela">
+          <span id="bolaLetra" class="letra"></span>
+          <span id="bolaNumero" class="numero">?</span>
+        </div>
+      </div>
+      <p class="legenda-bola">Última bola cantada</p>
+
+      <div class="anteriores">
+        <span class="rotulo">Anteriores</span>
+        <div id="bolasAnteriores" class="fila-bolas"></div>
+      </div>
+
+      <div class="contagem">
+        <span id="qtdeSorteados">0</span> de <span id="qtdeTotal">75</span> números
+      </div>
+
+    </section>
+
+    <!-- Painel completo de números -->
+    <section class="lado-painel">
+      <div id="painelNumeros" class="painel"></div>
+
+      <!-- Esteira contínua com as logos dos patrocinadores -->
+      <div id="faixaPatrocinadores" class="faixa-patrocinadores" hidden>
+        <span class="rotulo-patro">🤝 Patrocinadores</span>
+        <div class="janela-patro">
+          <div id="trilhoPatrocinadores" class="trilho-patro"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <p id="mensagemRodape">Boa sorte a todos!</p>
+  </footer>
+
+  <!-- Aviso de espera entre rodadas -->
+  <div id="telaEspera" class="tela-espera" hidden>
+    <div class="mini-cartela" aria-hidden="true">
+      <div class="mc-topo">
+        <span>B</span><span>I</span><span>N</span><span>G</span><span>O</span>
+      </div>
+      <div class="mc-grade">
+        <span>4</span><span>17</span><span>32</span><span>51</span><span>66</span>
+        <span>9</span><span>23</span><span class="mc-livre">★</span><span>48</span><span>71</span>
+        <span>12</span><span>28</span><span>39</span><span>57</span><span>63</span>
+      </div>
+    </div>
+    <h2 id="esperaTitulo">Temos um ganhador!</h2>
+    <p id="esperaTexto">Aguarde: a próxima rodada começa em instantes.</p>
+  </div>
+
+  <div id="toastGanhador" class="toast-ganhador" hidden></div>
+
+  <!-- Conferência dos nomes antes do sorteio -->
+  <div id="telaDisputa" class="tela-disputa" hidden>
+    <div class="disputa-caixa">
+      <span class="disputa-rotulo">🎲 Vamos sortear!</span>
+      <h2 id="disputaTitulo">Confira se o seu nome está na lista</h2>
+      <p id="disputaPremio" class="disputa-premio"></p>
+      <div id="disputaLista" class="disputa-lista"></div>
+      <p class="disputa-rodape">Algum nome errado ou faltando? Avise a organização antes do sorteio.</p>
+    </div>
+  </div>
+
+  <button id="btnSom" class="btn-som" type="button" title="Ativar/desativar sons de tambor e fanfarra">
+    🔇 Ativar som
+  </button>
+
+  <script src="/js/telao.js"></script>
+</body>
+</html>

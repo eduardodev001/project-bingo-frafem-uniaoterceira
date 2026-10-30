@@ -1,0 +1,11 @@
+🔊 SOM PERSONALIZADO DE VITÓRIA
+
+Quer usar um som de verdade (vinheta, sino de igreja, aplausos gravados)?
+
+1. Escolha qualquer arquivo MP3 festivo.
+2. Renomeie para:  vitoria.mp3
+3. Coloque aqui nesta pasta (public/sons/).
+
+Pronto! O telão passa a tocar o SEU som na revelação do ganhador.
+Se o arquivo não existir, o sistema usa o som embutido
+(aplausos + repique de sinos).

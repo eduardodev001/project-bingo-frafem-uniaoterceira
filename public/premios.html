@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prêmios &amp; Rodadas - Bingo Comunitário</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+  <style>
+    .rodape-acoes { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .rodada-card {
+      border: 1px solid var(--borda);
+      border-left: 7px solid var(--cor-rodada, #ccc);
+      border-radius: 14px; padding: 14px; margin-bottom: 12px; background: #fdfbf4;
+    }
+    .rodada-card.realizada { opacity: .62; background: #f3f1e9; }
+    .cab-rodada { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .num-ordem {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: grid; place-items: center; flex-shrink: 0;
+      font-family: var(--fonte-display); font-weight: 700;
+      background: var(--cor-rodada, #ccc); color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,.35);
+    }
+    .tag-tipo {
+      font-size: .72rem; font-weight: 700; letter-spacing: .06em;
+      padding: 3px 10px; border-radius: 99px; text-transform: uppercase;
+    }
+    .tag-tipo.comum { background: #e7f2e8; color: var(--ok); }
+    .tag-tipo.extra { background: #efe3f7; color: #6b3b91; }
+    .rodada-card input[type="text"] {
+      padding: 9px 11px; border: 1px solid var(--borda); border-radius: 9px; font: inherit;
+    }
+    .rodada-card input[type="color"] {
+      width: 46px; height: 38px; padding: 3px; cursor: pointer;
+      border: 1px solid var(--borda); border-radius: 9px;
+    }
+    .premios-lista { display: flex; flex-direction: column; gap: 8px; margin: 12px 0 0 48px; }
+    .premio-item { display: flex; align-items: center; gap: 10px; }
+    .premio-item .pos {
+      font-family: var(--fonte-display); font-weight: 700; font-size: .85rem;
+      color: var(--tinta-suave); width: 26px; flex-shrink: 0;
+    }
+    .premio-item input { flex: 1; }
+    .premio-item .entregue { font-size: .78rem; color: var(--ok); font-weight: 700; white-space: nowrap; }
+    .mini { padding: 6px 10px; font-size: .8rem; }
+    .barra-add {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+      padding: 18px; border: 2px dashed var(--borda); border-radius: 14px; margin-top: 6px;
+    }
+    .vazio-seq { text-align: center; color: var(--tinta-suave); padding: 26px 10px; font-size: .95rem; }
+    .bolinha-and {
+      width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+      font-family: var(--fonte-display); font-weight: 600; font-size: .85rem;
+      border: 2px solid transparent; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.3);
+    }
+    .bolinha-and.pendente { background: #f1ecdd; color: var(--tinta-suave); text-shadow: none; }
+  </style>
+</head>
+<body class="admin">
+  <header class="topo">
+    <h1>🏆 Prêmios &amp; Rodadas</h1>
+    <nav class="nav">
+      <a href="/" target="_blank">Abrir telão ↗</a>
+      <a href="/operador">Operador</a>
+      <a href="/premios" aria-current="page">Prêmios &amp; Rodadas</a>
+      <a href="/relatorios">Relatórios</a>
+      <a href="/personalizar">Personalizar</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="aviso" class="aviso" role="status"></div>
+
+    <section id="cartaoCriar" class="cartao" hidden>
+      <h2>Passo 1 - Criar o evento do bingo</h2>
+      <p style="font-size:.9rem;color:var(--tinta-suave);margin-bottom:14px">
+        Comece dando um nome ao evento. Na sequência você monta as rodadas,
+        na ordem em que elas vão acontecer.
+      </p>
+      <div class="linha-form">
+        <div class="campo">
+          <label for="nomeEventoNovo">Nome do evento *</label>
+          <input id="nomeEventoNovo" type="text" placeholder="Ex.: Bingo Beneficente - Setembro/2026">
+        </div>
+      </div>
+      <button id="btnCriarEvento" class="btn-primario">✔ Criar evento e montar as rodadas</button>
+    </section>
+
+    <section id="cartaoEvento" class="cartao" hidden>
+      <h2>Evento: <span id="tituloEvento"></span></h2>
+      <div class="linha-form" style="margin-top:10px;align-items:flex-end">
+        <div class="campo">
+          <label for="nomeEventoEdit">Nome do evento</label>
+          <input id="nomeEventoEdit" type="text">
+        </div>
+        <div class="campo" style="flex:0 0 auto">
+          <button id="btnSalvarNome" class="btn-neutro" type="button">Salvar nome</button>
+        </div>
+      </div>
+      <div id="andamentoRodadas" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"></div>
+      <p id="resumoAndamento" style="font-size:.9rem;color:var(--tinta-suave);margin-top:8px"></p>
+    </section>
+
+    <section id="cartaoSequencia" class="cartao" hidden>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px">
+        <h2 style="margin:0">Passo 2 - Sequência das rodadas</h2>
+        <span id="resumoSeq" class="selo pendente"></span>
+      </div>
+      <p style="font-size:.9rem;color:var(--tinta-suave);margin-bottom:16px">
+        Monte as rodadas <strong>na ordem em que vão acontecer</strong>, misturando
+        comuns e extras como quiser (ex.: comum → extra rosa → comum). Cada rodada
+        tem nome, cor e seus próprios prêmios. Use ↑ ↓ para reordenar.
+      </p>
+
+      <div id="listaSequencia"></div>
+      <p id="vazioSeq" class="vazio-seq" hidden>
+        Nenhuma rodada ainda. Use os botões abaixo para montar a sequência do bingo.
+      </p>
+
+      <div class="barra-add">
+        <button id="btnAddComum" class="btn-primario" type="button">＋ Rodada comum</button>
+        <button id="btnAddExtra" class="btn-destaque" type="button">＋ Rodada extra (cartela colorida)</button>
+      </div>
+
+      <div class="rodape-acoes" style="margin-top:18px">
+        <button id="btnSalvarSeq" class="btn-destaque">💾 Salvar sequência</button>
+        <span style="flex:1"></span>
+        <button id="btnConcluirEvento" class="btn-perigo">🏁 Concluir evento do bingo</button>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="modalConcluir">
+    <h2>🏁 Concluir o evento?</h2>
+    <p class="sub" id="resumoConcluir"></p>
+    <p style="font-size:.92rem;margin-bottom:18px">
+      Após concluído, não será possível iniciar novas rodadas neste evento.
+      Os ganhadores e relatórios continuam disponíveis normalmente.
+    </p>
+    <div class="rodape-acoes" style="justify-content:flex-end">
+      <button id="btnCancelarConcluir" class="btn-neutro">Cancelar</button>
+      <button id="btnConfirmarConcluir" class="btn-perigo">Sim, concluir evento</button>
+    </div>
+  </dialog>
+
+  <script src="/js/premios.js"></script>
+</body>
+</html>

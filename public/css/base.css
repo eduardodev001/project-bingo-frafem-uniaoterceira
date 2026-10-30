@@ -1,0 +1,134 @@
+/* ============================================================
+   BINGO COMUNITÁRIO - estilos das telas administrativas
+   (operador, relatórios e personalizar)
+   ============================================================ */
+:root {
+  --primaria: #123b2f;
+  --destaque: #f5b301;
+  --papel: #fbf7ee;
+  --tinta: #22271f;
+  --tinta-suave: #6b7263;
+  --borda: #e3ddcc;
+  --erro: #c0392b;
+  --ok: #2e7d32;
+  --raio: 14px;
+  --fonte-display: 'Fredoka', 'Segoe UI', sans-serif;
+  --fonte-corpo: 'Atkinson Hyperlegible', 'Segoe UI', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body.admin {
+  font-family: var(--fonte-corpo);
+  background: var(--papel);
+  color: var(--tinta);
+  min-height: 100vh;
+}
+
+/* ---------- Cabeçalho com bandeirinhas ---------- */
+.topo {
+  background: var(--primaria);
+  color: #fff;
+  padding: 18px 24px 26px;
+  position: relative;
+}
+.topo::after { /* bandeirinhas de festa */
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 14px;
+  background:
+    linear-gradient(135deg, var(--primaria) 50%, transparent 50%) 0 0 / 22px 14px repeat-x,
+    linear-gradient(225deg, var(--primaria) 50%, transparent 50%) 11px 0 / 22px 14px repeat-x;
+}
+.topo h1 {
+  font-family: var(--fonte-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: .02em;
+}
+.topo .nav { margin-top: 8px; display: flex; gap: 14px; flex-wrap: wrap; }
+.topo .nav a {
+  color: #fff; opacity: .75; text-decoration: none; font-size: .92rem;
+  padding: 3px 0; border-bottom: 2px solid transparent;
+}
+.topo .nav a:hover, .topo .nav a:focus-visible { opacity: 1; }
+.topo .nav a[aria-current="page"] { opacity: 1; border-bottom-color: var(--destaque); }
+
+main { max-width: 1060px; margin: 0 auto; padding: 34px 20px 60px; }
+
+/* ---------- Cartões e formulários ---------- */
+.cartao {
+  background: #fff;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 22px;
+  margin-bottom: 20px;
+}
+.cartao h2 {
+  font-family: var(--fonte-display);
+  font-weight: 600;
+  font-size: 1.12rem;
+  margin-bottom: 14px;
+}
+.linha-form { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+.campo { flex: 1 1 220px; display: flex; flex-direction: column; gap: 5px; }
+.campo label { font-size: .84rem; color: var(--tinta-suave); font-weight: 600; }
+.campo input, .campo select, .campo textarea {
+  font: inherit; padding: 10px 12px;
+  border: 1px solid var(--borda); border-radius: 9px; background: #fff;
+}
+.campo input:focus-visible, .campo select:focus-visible, .campo textarea:focus-visible,
+button:focus-visible, a:focus-visible {
+  outline: 3px solid var(--destaque); outline-offset: 2px;
+}
+
+/* ---------- Botões ---------- */
+button {
+  font: inherit; font-weight: 700; cursor: pointer;
+  border: none; border-radius: 10px; padding: 11px 18px;
+  transition: transform .08s ease, filter .12s ease;
+}
+button:hover { filter: brightness(1.06); }
+button:active { transform: scale(.97); }
+.btn-primario { background: var(--primaria); color: #fff; }
+.btn-destaque { background: var(--destaque); color: #3a2c00; }
+.btn-perigo   { background: var(--erro); color: #fff; }
+.btn-neutro   { background: #eee7d6; color: var(--tinta); }
+button:disabled { opacity: .45; cursor: not-allowed; filter: none; }
+
+/* ---------- Avisos ---------- */
+.aviso {
+  border-radius: 10px; padding: 12px 14px; margin-bottom: 16px;
+  font-size: .95rem; display: none;
+}
+.aviso.mostrar { display: block; }
+.aviso.ok   { background: #e7f2e8; color: var(--ok); }
+.aviso.erro { background: #f9e5e2; color: var(--erro); }
+
+/* ---------- Tabela ---------- */
+table { width: 100%; border-collapse: collapse; font-size: .93rem; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--borda); vertical-align: top; }
+th { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-suave); }
+tr:hover td { background: #faf6ea; }
+
+.selo {
+  display: inline-block; padding: 2px 10px; border-radius: 99px;
+  font-size: .78rem; font-weight: 700;
+}
+.selo.aberta { background: #e7f2e8; color: var(--ok); }
+.selo.pendente { background: #fdf3d7; color: #8a6d00; }
+
+/* ---------- Modal ---------- */
+dialog {
+  border: none; border-radius: var(--raio);
+  padding: 26px; max-width: 560px; width: calc(100% - 40px);
+  box-shadow: 0 24px 60px rgba(0,0,0,.35);
+}
+dialog::backdrop { background: rgba(10, 20, 15, .55); }
+dialog h2 { font-family: var(--fonte-display); margin-bottom: 4px; }
+dialog .sub { color: var(--tinta-suave); font-size: .9rem; margin-bottom: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

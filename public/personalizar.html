@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personalizar - Bingo Comunitário</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+  <style>
+    .cores { display: flex; gap: 20px; flex-wrap: wrap; }
+    .cores .campo { flex: 0 1 200px; }
+    input[type="color"] { width: 100%; height: 46px; padding: 4px; cursor: pointer; }
+    .banner-atual { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+    .banner-atual img {
+      max-height: 90px; max-width: 280px; border-radius: 10px;
+      border: 1px solid var(--borda); background: #fff; padding: 4px;
+    }
+    .previa {
+      border-radius: var(--raio);
+      padding: 26px;
+      color: #fff;
+      text-align: center;
+      background: var(--previa-fundo, #123b2f);
+    }
+    .previa h3 {
+      font-family: var(--fonte-display);
+      font-size: 1.7rem;
+      text-shadow: 0 2px 0 rgba(0,0,0,.3);
+    }
+    .previa p { color: var(--previa-destaque, #f5b301); font-weight: 700; margin-top: 4px; }
+  </style>
+</head>
+<body class="admin">
+  <header class="topo">
+    <h1>🎨 Personalizar o Telão</h1>
+    <nav class="nav">
+      <a href="/" target="_blank">Abrir telão ↗</a>
+      <a href="/operador">Operador</a>
+      <a href="/premios">Prêmios &amp; Rodadas</a>
+      <a href="/relatorios">Relatórios</a>
+      <a href="/personalizar" aria-current="page">Personalizar</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="aviso" class="aviso" role="status"></div>
+
+    <section class="cartao">
+      <h2>Textos do evento</h2>
+      <div class="linha-form">
+        <div class="campo">
+          <label for="nomeEvento">Nome do evento</label>
+          <input id="nomeEvento" type="text" placeholder="Ex.: Bingo da Paróquia São José">
+        </div>
+        <div class="campo">
+          <label for="subtitulo">Subtítulo</label>
+          <input id="subtitulo" type="text" placeholder="Ex.: Em prol da reforma do salão">
+        </div>
+      </div>
+      <div class="linha-form">
+        <div class="campo">
+          <label for="mensagemRodape">Mensagem do rodapé</label>
+          <input id="mensagemRodape" type="text" placeholder="Ex.: Boa sorte a todos!">
+        </div>
+        <div class="campo">
+          <label for="maxNumero">Tipo de bingo</label>
+          <select id="maxNumero">
+            <option value="75">75 bolas (B-I-N-G-O)</option>
+            <option value="90">90 bolas (1 a 90)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="cartao">
+      <h2>Cores do telão</h2>
+      <div class="cores">
+        <div class="campo">
+          <label for="corPrimaria">Cor de fundo</label>
+          <input id="corPrimaria" type="color" value="#123b2f">
+        </div>
+        <div class="campo">
+          <label for="corDestaque">Cor de destaque</label>
+          <input id="corDestaque" type="color" value="#f5b301">
+        </div>
+      </div>
+      <div class="previa" id="previa" style="margin-top:18px">
+        <h3 id="previaNome">Bingo Comunitário</h3>
+        <p id="previaSub">Em prol da nossa comunidade</p>
+      </div>
+    </section>
+
+    <section class="cartao">
+      <h2>Cores das bolas do telão</h2>
+      <p style="font-size:.9rem;color:var(--tinta-suave);margin-bottom:10px">
+        Cor de cada coluna (B, I, N, G, O). As bolas marcadas sempre têm o
+        centro branco com número preto, então qualquer cor fica legível -
+        inclusive preto. Evite repetir as cores das cartelas das rodadas extras.
+      </p>
+      <div class="cores">
+        <div class="campo" style="flex:0 1 120px">
+          <label for="corBolaB">Coluna B</label>
+          <input id="corBolaB" type="color" value="#7d4bc0">
+        </div>
+        <div class="campo" style="flex:0 1 120px">
+          <label for="corBolaI">Coluna I</label>
+          <input id="corBolaI" type="color" value="#d03b2f">
+        </div>
+        <div class="campo" style="flex:0 1 120px">
+          <label for="corBolaN">Coluna N</label>
+          <input id="corBolaN" type="color" value="#f4f4f0">
+        </div>
+        <div class="campo" style="flex:0 1 120px">
+          <label for="corBolaG">Coluna G</label>
+          <input id="corBolaG" type="color" value="#e0762b">
+        </div>
+        <div class="campo" style="flex:0 1 120px">
+          <label for="corBolaO">Coluna O</label>
+          <input id="corBolaO" type="color" value="#8a5a34">
+        </div>
+      </div>
+    </section>
+
+    <section class="cartao">
+      <h2>Banner do evento</h2>
+      <p style="font-size:.9rem;color:var(--tinta-suave);margin-bottom:10px">
+        Envie a logo ou arte do evento (PNG, JPG, WEBP ou GIF, até 8 MB).
+        Ela aparece no topo do telão.
+      </p>
+      <input id="arquivoBanner" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+      <div class="banner-atual">
+        <img id="bannerAtual" alt="Banner atual" hidden>
+        <button id="btnRemoverBanner" class="btn-neutro" hidden>Remover banner</button>
+      </div>
+    </section>
+
+    <section class="cartao">
+      <h2>🤝 Patrocinadores do telão</h2>
+      <p style="font-size:.9rem;color:var(--tinta-suave);margin-bottom:12px">
+        As logos passam em <strong>carrossel contínuo</strong> no telão, abaixo do
+        painel de números, durante todo o bingo.
+        <strong>Tamanho ideal: 1000 x 400 pixels</strong> (formato deitado, proporção
+        até 2,5:1), PNG com fundo transparente ou branco. Logos quadradas
+        funcionam com no mínimo 400 x 400. Você pode desativar uma logo sem excluí-la.
+      </p>
+      <div class="linha-form" style="align-items:flex-end">
+        <div class="campo" style="flex:0 1 240px">
+          <label for="patroNome">Nome do patrocinador (opcional)</label>
+          <input id="patroNome" type="text" placeholder="Ex.: Mercado do João">
+        </div>
+        <div class="campo">
+          <label for="patroArquivo">Logos (pode selecionar VÁRIAS de uma vez)</label>
+          <input id="patroArquivo" type="file" multiple
+                 accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml">
+          <small style="color:var(--tinta-suave);font-size:.8rem">
+            Segure Ctrl (ou Shift) para marcar várias. Ao enviar em massa, o nome
+            de cada patrocinador vem do nome do arquivo e pode ser ajustado na lista.
+          </small>
+        </div>
+        <div class="campo" style="flex:0 0 auto">
+          <button id="btnAddPatro" class="btn-primario" type="button">＋ Adicionar logo(s)</button>
+        </div>
+      </div>
+      <div id="listaPatro" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:14px"></div>
+    </section>
+
+    <button id="btnSalvar" class="btn-destaque" style="font-size:1.05rem;padding:14px 30px">
+      💾 Salvar personalização
+    </button>
+  </main>
+
+  <script src="/js/personalizar.js"></script>
+</body>
+</html>

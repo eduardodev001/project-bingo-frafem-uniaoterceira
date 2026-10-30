@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatórios - Bingo Comunitário</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+  <style>
+    .numeros-rodada {
+      font-size: .82rem;
+      color: var(--tinta-suave);
+      max-width: 320px;
+      line-height: 1.5;
+    }
+    .barra-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+    .vazio { text-align: center; color: var(--tinta-suave); padding: 40px 10px; }
+  </style>
+</head>
+<body class="admin">
+  <header class="topo">
+    <h1>📋 Relatório de Ganhadores</h1>
+    <nav class="nav">
+      <a href="/" target="_blank">Abrir telão ↗</a>
+      <a href="/operador">Operador</a>
+      <a href="/premios">Prêmios &amp; Rodadas</a>
+      <a href="/relatorios" aria-current="page">Relatórios</a>
+      <a href="/personalizar">Personalizar</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="aviso" class="aviso" role="status"></div>
+
+    <section class="cartao">
+      <div class="barra-topo">
+        <h2 style="margin:0">Últimos ganhadores e números sorteados</h2>
+        <a href="/api/relatorios/ganhadores.csv">
+          <button class="btn-destaque" type="button">⬇ Exportar CSV (Excel)</button>
+        </a>
+      </div>
+
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Evento</th>
+              <th>Rodada</th>
+              <th>Ganhador</th>
+              <th>Documento</th>
+              <th>Cartela</th>
+              <th>Prêmio</th>
+              <th>Data</th>
+              <th>Números da rodada</th>
+              <th>Entrega</th>
+            </tr>
+          </thead>
+          <tbody id="corpoTabela"></tbody>
+        </table>
+        <p id="vazio" class="vazio" hidden>
+          Ainda não há ganhadores registrados. Assim que a primeira rodada for encerrada,
+          o ganhador aparecerá aqui.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/relatorios.js"></script>
+</body>
+</html>

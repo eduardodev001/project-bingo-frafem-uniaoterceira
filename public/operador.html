@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operador - Bingo Comunitário</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/base.css">
+  <style>
+    .grade-operador {
+      display: grid;
+      grid-template-columns: repeat(15, 1fr);
+      gap: 6px;
+    }
+    .grade-operador button {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      padding: 0;
+      font-family: var(--fonte-display);
+      font-weight: 600;
+      font-size: .95rem;
+      background: #f1ecdd;
+      color: var(--tinta-suave);
+      border: 1px solid var(--borda);
+    }
+    .grade-operador button.marcado {
+      background: var(--primaria);
+      color: #fff;
+      border-color: transparent;
+    }
+    .grade-operador button.ultimo { outline: 3px solid var(--destaque); }
+    .barra-acoes { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .entrada-numero {
+      font-family: var(--fonte-display);
+      font-size: 1.6rem;
+      width: 130px;
+      text-align: center;
+      padding: 10px;
+      border: 2px solid var(--primaria);
+      border-radius: 12px;
+    }
+    .btn-bingo { font-size: 1.05rem; padding: 14px 26px; }
+    .status-rodada { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .opcoes-rodada { display: flex; flex-direction: column; gap: 10px; }
+    .opcao-rodada {
+      display: flex; align-items: center; gap: 12px;
+      border: 2px solid var(--borda); border-radius: 12px;
+      padding: 12px 14px; cursor: pointer; background: #fdfbf4;
+    }
+    .opcao-rodada:has(input:checked) { border-color: var(--primaria); background: #f2f7f0; }
+    .opcao-rodada input { width: 18px; height: 18px; accent-color: var(--primaria); }
+    .opcao-rodada .bolinha-cor {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      box-shadow: inset -2px -3px 5px rgba(0,0,0,.25);
+    }
+    .opcao-rodada .info { flex: 1; }
+    .opcao-rodada .info small { color: var(--tinta-suave); }
+    .escolha-final { display: flex; gap: 14px; flex-wrap: wrap; }
+    .cartao-escolha {
+      flex: 1 1 230px; text-align: left; padding: 16px;
+      border-radius: 14px; border: 2px solid var(--borda);
+      background: #fff; cursor: pointer; font: inherit;
+      display: flex; flex-direction: column; gap: 4px;
+      transition: transform .08s ease, border-color .15s ease, background .15s ease;
+    }
+    .cartao-escolha:hover { transform: translateY(-2px); }
+    .cartao-escolha .ico { font-size: 1.6rem; }
+    .cartao-escolha .tit { font-family: var(--fonte-display); font-weight: 700; font-size: 1.02rem; }
+    .cartao-escolha .desc { font-size: .85rem; color: var(--tinta-suave); font-weight: 400; line-height: 1.4; }
+    .cartao-escolha.continuar:hover { border-color: var(--destaque); background: #fffaeb; }
+    .cartao-escolha.encerrar:hover { border-color: var(--erro); background: #fdf1ef; }
+    dialog#modalGanhador { max-width: 640px; }
+    /* ---- Modais modernos ---- */
+    dialog { border: none; padding: 0; }
+    dialog::backdrop { background: rgba(8, 18, 12, .62); backdrop-filter: blur(3px); }
+    dialog[open] { animation: modal-entra .26s cubic-bezier(.2, 1.2, .4, 1); }
+    @keyframes modal-entra {
+      from { opacity: 0; transform: translateY(16px) scale(.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-aviso {
+      max-width: 500px; text-align: center;
+      border-radius: 20px; overflow: hidden;
+      box-shadow: 0 30px 70px rgba(0,0,0,.4);
+    }
+    .modal-aviso .faixa-topo { height: 7px; }
+    .modal-aviso .corpo { padding: 30px 34px 26px; }
+    .icone-aviso {
+      width: 78px; height: 78px; border-radius: 50%;
+      display: grid; place-items: center; margin: 0 auto 18px;
+      font-size: 2.4rem; font-weight: 700;
+    }
+    .icone-aviso.erro { background: #fdeceb; color: var(--erro); box-shadow: 0 0 0 8px #fdeceb66; }
+    .icone-aviso.pergunta { background: #fdf3d7; color: #a07c00; box-shadow: 0 0 0 8px #fdf3d766; }
+    .modal-aviso h2 {
+      font-family: var(--fonte-display); font-size: 1.45rem; margin-bottom: 10px; line-height: 1.25;
+    }
+    .modal-aviso p { font-size: 1.02rem; line-height: 1.55; color: var(--tinta-suave); }
+    .modal-aviso button { border-radius: 12px; padding: 13px 22px; }
+    #modalGanhador, #modalSorteio { border-radius: 20px; padding: 26px; box-shadow: 0 30px 70px rgba(0,0,0,.4); }
+    .selo-extra {
+      display: inline-block; padding: 2px 10px; border-radius: 99px;
+      font-size: .74rem; font-weight: 700; color: #fff; letter-spacing: .04em;
+    }
+    .bloco-ganhador {
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      position: relative;
+      background: #fdfbf4;
+    }
+    .bloco-ganhador .cabecalho-bloco {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+    }
+    .bloco-ganhador .cabecalho-bloco strong { font-family: var(--fonte-display); }
+    .bloco-ganhador .remover {
+      background: none; color: var(--erro); font-size: .84rem; padding: 4px 8px;
+    }
+    .ultimo-cantado {
+      font-family: var(--fonte-display); font-weight: 700; font-size: 1.15rem;
+      color: var(--primaria);
+    }
+    @media (max-width: 760px) { .grade-operador { grid-template-columns: repeat(10, 1fr); } }
+  </style>
+</head>
+<body class="admin">
+  <header class="topo">
+    <h1>🎱 Painel do Operador</h1>
+    <nav class="nav">
+      <a href="/" target="_blank">Abrir telão ↗</a>
+      <a href="/operador" aria-current="page">Operador</a>
+      <a href="/premios">Prêmios &amp; Rodadas</a>
+      <a href="/relatorios">Relatórios</a>
+      <a href="/personalizar">Personalizar</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="aviso" class="aviso" role="status"></div>
+
+    <!-- Sem evento aberto -->
+    <section id="cartaoSemEvento" class="cartao" hidden>
+      <h2>Nenhum evento aberto</h2>
+      <p style="font-size:.95rem;color:var(--tinta-suave);margin-bottom:14px">
+        Antes de iniciar as rodadas, crie o evento do bingo definindo a quantidade
+        de rodadas e o prêmio de cada uma.
+      </p>
+      <a href="/premios"><button class="btn-primario" type="button">🏆 Criar evento em Prêmios &amp; Rodadas</button></a>
+    </section>
+
+    <!-- Estado sem rodada (evento aberto): escolher qual rodada vai ao ar -->
+    <section id="cartaoNovaRodada" class="cartao" hidden>
+      <h2 id="tituloNovaRodada">Escolha a próxima rodada</h2>
+      <p id="andamentoEvento" style="font-size:.9rem;color:var(--tinta-suave);margin-bottom:12px"></p>
+
+      <div id="opcoesRodada" class="opcoes-rodada"></div>
+
+      <div class="linha-form" style="margin-top:14px">
+        <div class="campo">
+          <label for="premioNovo">Substituir o prêmio desta rodada (opcional)</label>
+          <input id="premioNovo" type="text"
+                 placeholder="Deixe em branco para usar o prêmio planejado da rodada escolhida">
+        </div>
+      </div>
+      <div class="barra-acoes">
+        <button id="btnIniciar" class="btn-primario">▶ Iniciar rodada selecionada</button>
+        <span style="flex:1"></span>
+        <button id="btnConcluirEvento" class="btn-perigo" hidden>🏁 Concluir evento do bingo</button>
+      </div>
+    </section>
+
+    <!-- Rodada em andamento -->
+    <section id="cartaoRodada" class="cartao" hidden>
+      <div class="status-rodada">
+        <h2 style="margin:0">Rodada <span id="rodadaAtual">-</span> <span id="totalRodadas"></span> em andamento</h2>
+        <span class="selo aberta">ABERTA</span>
+        <span id="premioAtual" class="ultimo-cantado"></span>
+      </div>
+
+      <div class="barra-acoes" style="margin-bottom:18px">
+        <input id="entradaNumero" class="entrada-numero" type="number" min="1" max="90"
+               placeholder="Nº" autocomplete="off" autofocus>
+        <button id="btnCantar" class="btn-primario">Cantar número (Enter)</button>
+        <button id="btnDesfazer" class="btn-neutro">↩ Desfazer último</button>
+        <button id="btnCancelarRodada" class="btn-neutro" hidden
+                title="Disponível apenas enquanto nenhum número foi cantado">
+          ⬅ Cancelar rodada (escolher outra)
+        </button>
+        <span class="ultimo-cantado" id="ultimoCantado"></span>
+        <span style="flex:1"></span>
+        <button id="btnBingo" class="btn-perigo btn-bingo">🎉 BINGO! Encerrar rodada</button>
+      </div>
+
+      <p style="font-size:.86rem;color:var(--tinta-suave);margin-bottom:10px">
+        Dica: você também pode clicar direto no número na grade abaixo.
+      </p>
+      <div id="gradeOperador" class="grade-operador"></div>
+    </section>
+  </main>
+
+  <!-- Modal de registro do(s) ganhador(es) -->
+  <dialog id="modalGanhador">
+    <h2>🎉 Registrar ganhador(es)</h2>
+    <p class="sub" id="tituloPremioVez" style="font-weight:700;color:var(--primaria)"></p>
+    <p class="sub">
+      Informe o <strong>nome</strong> e o <strong>número da cartela</strong>.
+      Mais de uma pessoa bateu BINGO? Adicione todas - o sistema fará um
+      <strong>sorteio</strong> para decidir quem fica com o prêmio.
+    </p>
+
+    <div id="listaGanhadores"></div>
+
+    <div class="barra-acoes" style="margin-bottom:14px">
+      <button id="btnAddGanhador" class="btn-neutro" type="button">＋ Adicionar outro ganhador (empate)</button>
+      <span style="flex:1"></span>
+      <button id="btnMostrarTelao" class="btn-primario" type="button">
+        👁 Mostrar nomes no telão (conferência)
+      </button>
+    </div>
+    <p id="statusConferencia" class="aviso ok" style="display:none"></p>
+
+    <div class="linha-form">
+      <div class="campo">
+        <label for="gPremio">Prêmio deste ganhador *</label>
+        <input id="gPremio" type="text">
+      </div>
+      <div class="campo">
+        <label for="gObs">Observações</label>
+        <input id="gObs" type="text">
+      </div>
+    </div>
+    <div class="linha-form">
+      <div class="campo">
+        <label for="gSobressalente">Próximo prêmio - sobressalente (só para CONTINUAR)</label>
+        <input id="gSobressalente" type="text"
+               placeholder="Obrigatório ao continuar SE a fila de prêmios desta cartela acabou">
+      </div>
+    </div>
+    <p style="font-weight:700;margin:18px 0 10px">E depois de salvar, o que fazer com a rodada?</p>
+    <div class="escolha-final">
+      <button id="btnSalvarContinuar" type="button" class="cartao-escolha continuar">
+        <span class="ico">🔁</span>
+        <span class="tit">CONTINUAR esta rodada</span>
+        <span class="desc">Os números ficam no telão e o <strong>próximo prêmio</strong>
+          entra em disputa - para quem ainda está perto de bater.</span>
+      </button>
+      <button id="btnSalvarEncerrar" type="button" class="cartao-escolha encerrar">
+        <span class="ico">🏁</span>
+        <span class="tit">ENCERRAR esta rodada</span>
+        <span class="desc">Fecha a rodada, limpa o telão e volta para a
+          <strong>escolha da próxima cartela</strong>.</span>
+      </button>
+    </div>
+    <div class="barra-acoes" style="justify-content:center;margin-top:12px">
+      <button id="btnCancelarGanhador" class="btn-neutro">Cancelar (não salvar)</button>
+    </div>
+  </dialog>
+
+  <!-- Resultado do sorteio de desempate -->
+  <dialog id="modalSorteio">
+    <h2>🎲 Sorteio de desempate</h2>
+    <p class="sub" id="sorteioEmpatados"></p>
+    <p style="font-size:1.05rem;margin:14px 0;text-align:center">
+      Quem fica com o prêmio é...<br>
+      <strong id="sorteioVencedor"
+        style="display:inline-block;min-height:2.2rem;margin-top:8px;font-size:1.6rem;font-family:var(--fonte-display);color:var(--primaria)"></strong>
+    </p>
+    <div class="barra-acoes" style="justify-content:flex-end">
+      <button id="btnFecharSorteio" class="btn-destaque" disabled>Sorteando...</button>
+    </div>
+  </dialog>
+  <style>
+    #sorteioVencedor.embaralhando { opacity: .55; filter: blur(1px); }
+    #sorteioVencedor.revelado { animation: revelar .5s cubic-bezier(.2,1.4,.4,1); color: var(--erro) !important; }
+    @keyframes revelar {
+      0% { transform: scale(.4); opacity: 0; }
+      60% { transform: scale(1.15); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+
+  <!-- Modal de ERRO: mensagem grande, impossível de ignorar -->
+  <dialog id="modalErro" class="modal-aviso">
+    <div class="faixa-topo" style="background:var(--erro)"></div>
+    <div class="corpo">
+      <div class="icone-aviso erro">⚠</div>
+      <h2 id="erroTitulo">Ops!</h2>
+      <p id="erroTexto"></p>
+      <div class="barra-acoes" style="justify-content:center;margin-top:22px">
+        <button id="btnFecharErro" class="btn-primario" style="min-width:180px">Entendi</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Modal de CONFIRMAÇÃO -->
+  <dialog id="modalConfirma" class="modal-aviso">
+    <div class="faixa-topo" style="background:var(--destaque)"></div>
+    <div class="corpo">
+      <div class="icone-aviso pergunta">?</div>
+      <h2 id="confirmaTitulo"></h2>
+      <p id="confirmaTexto"></p>
+      <div class="barra-acoes" style="justify-content:center;margin-top:22px">
+        <button id="btnConfirmaNao" class="btn-neutro" style="min-width:130px">Cancelar</button>
+        <button id="btnConfirmaSim" class="btn-perigo" style="min-width:180px">Confirmar</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="/js/operador.js"></script>
+</body>
+</html>

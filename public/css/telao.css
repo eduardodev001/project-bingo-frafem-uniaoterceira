@@ -1,0 +1,766 @@
+/* ============================================================
+   TELÃO - pensado para projetor/TV em evento comunitário.
+   As cores --primaria e --destaque vêm do banco (personalizável).
+   Cores das bolas escolhidas para NÃO conflitar com as cores
+   das cartelas das rodadas extras (azul, rosa, verde etc.):
+   B roxo · I vermelho · N branco · G laranja · O marrom
+   ============================================================ */
+:root {
+  --primaria: #123b2f;
+  --destaque: #f5b301;
+  --papel: #fbf7ee;
+  --col-b: #7d4bc0; --col-i: #d03b2f; --col-n: #f4f4f0;
+  --col-g: #e0762b; --col-o: #8a5a34;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  background:
+    radial-gradient(1200px 600px at 50% -10%, rgba(255,255,255,.10), transparent 60%),
+    var(--primaria);
+  color: var(--papel);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ---------- Bandeirinhas de quermesse no topo ---------- */
+.bandeirinhas {
+  height: 26px;
+  background:
+    linear-gradient(135deg, var(--col-i) 50%, transparent 50%) 0 0 / 44px 26px repeat-x,
+    linear-gradient(225deg, var(--col-i) 50%, transparent 50%) 22px 0 / 88px 26px repeat-x,
+    linear-gradient(135deg, var(--destaque) 50%, transparent 50%) 44px 0 / 88px 26px repeat-x,
+    linear-gradient(225deg, var(--destaque) 50%, transparent 50%) 66px 0 / 88px 26px repeat-x,
+    linear-gradient(135deg, var(--col-b) 50%, transparent 50%) 88px 0 / 176px 26px repeat-x,
+    linear-gradient(225deg, var(--col-b) 50%, transparent 50%) 110px 0 / 176px 26px repeat-x;
+  filter: drop-shadow(0 3px 3px rgba(0,0,0,.25));
+}
+
+/* ---------- Cabeçalho ---------- */
+.cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 20px 40px 10px;
+  flex-wrap: wrap;
+}
+.banner {
+  max-height: 96px;
+  max-width: 320px;
+  border-radius: 12px;
+  background: #fff;
+  padding: 4px;
+}
+.titulos { flex: 1; min-width: 260px; }
+.titulos h1 {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+  line-height: 1.05;
+  color: #fff;
+  text-shadow: 0 3px 0 rgba(0,0,0,.28);
+}
+.titulos p {
+  color: var(--destaque);
+  font-weight: 700;
+  font-size: clamp(.95rem, 1.6vw, 1.25rem);
+  margin-top: 4px;
+}
+.rodada-info {
+  text-align: center;
+  background: rgba(0,0,0,.28);
+  border: 2px dashed rgba(255,255,255,.35);
+  border-radius: 16px;
+  padding: 10px 22px;
+}
+.rodada-info .rotulo {
+  display: block;
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  opacity: .8;
+}
+.rodada-info .valor {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--destaque);
+  line-height: 1;
+}
+.rodada-info .premio { display: block; font-size: .9rem; margin-top: 3px; opacity: .9; }
+
+/* ---------- Palco principal ---------- */
+.palco {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(320px, 460px) 1fr;
+  gap: 34px;
+  padding: 18px 40px 24px;
+  align-items: start;
+}
+
+/* ---------- A BOLA (assinatura visual) ---------- */
+.bola {
+  --cor-bola: var(--destaque);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,.9), rgba(255,255,255,0) 34%),
+    radial-gradient(circle at 50% 50%, var(--cor-bola), color-mix(in srgb, var(--cor-bola) 55%, #000) 96%);
+  box-shadow:
+    inset -14px -18px 34px rgba(0,0,0,.35),
+    0 18px 40px rgba(0,0,0,.45);
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+.bola .janela {
+  width: 62%;
+  height: 62%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #ffffff, #e8e4d8 78%);
+  box-shadow: inset 0 4px 10px rgba(0,0,0,.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #1c1c1c;
+}
+.bola.gigante { width: min(42vh, 400px); aspect-ratio: 1; margin: 0 auto; }
+.bola.gigante .letra {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 4.5vh, 2.6rem);
+  line-height: 1;
+  color: var(--cor-bola);
+  filter: saturate(1.2) brightness(.85);
+}
+.bola.gigante .numero {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: clamp(4rem, 16vh, 9rem);
+  line-height: .95;
+}
+.bola.vazia { --cor-bola: #6b7263; }
+.bola.vazia .numero { color: #9a9a8f; }
+
+.bola-b { --cor-bola: var(--col-b); }
+.bola-i { --cor-bola: var(--col-i); }
+.bola-n { --cor-bola: var(--col-n); }
+.bola-n .letra { color: #555 !important; }
+.bola-g { --cor-bola: var(--col-g); }
+.bola-o { --cor-bola: var(--col-o); }
+
+@keyframes pop-bola {
+  0%   { transform: scale(.3) rotate(-18deg); opacity: 0; }
+  60%  { transform: scale(1.12) rotate(4deg); }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+.bola.animar { animation: pop-bola .55s cubic-bezier(.2, 1.4, .4, 1); }
+
+.legenda-bola {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 1rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .75;
+}
+
+/* ---------- Bolas anteriores ---------- */
+.anteriores { margin-top: 22px; text-align: center; }
+.anteriores .rotulo {
+  font-size: .78rem; text-transform: uppercase; letter-spacing: .16em; opacity: .65;
+}
+.fila-bolas {
+  display: flex; justify-content: center; gap: 12px; margin-top: 10px; min-height: 64px;
+}
+.fila-bolas .bola { width: 62px; aspect-ratio: 1; }
+.fila-bolas .bola .numero {
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 1.35rem;
+}
+
+.contagem {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1.05rem;
+  background: rgba(0,0,0,.25);
+  border-radius: 99px;
+  padding: 8px 18px;
+  width: fit-content;
+  margin-inline: auto;
+}
+.contagem span { font-weight: 700; color: var(--destaque); }
+
+/* ---------- Painel de números ---------- */
+.painel { display: flex; flex-direction: column; gap: 8px; }
+.linha-painel { display: flex; gap: 8px; align-items: stretch; }
+.letra-coluna {
+  width: 58px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.9rem;
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0,0,0,.3);
+  flex-shrink: 0;
+}
+.letra-coluna.n { color: #444; text-shadow: none; }
+.numeros-coluna {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  gap: 8px;
+  flex: 1;
+}
+.celula {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: clamp(.85rem, 1.7vw, 1.5rem);
+  background: rgba(255,255,255,.10);
+  color: rgba(255,255,255,.5);
+  border: 1px solid rgba(255,255,255,.14);
+  transition: transform .2s ease;
+}
+.celula.marcada {
+  /* Estilo "bola de sinuca": anel na cor da coluna, círculo branco no
+     centro e número preto - legível com QUALQUER cor, inclusive preto */
+  background:
+    radial-gradient(circle at 30% 26%, rgba(255,255,255,.55), transparent 42%),
+    radial-gradient(circle, #ffffff 0 54%, var(--cor-cel, var(--destaque)) 55% 100%);
+  color: #111111;
+  border-color: transparent;
+  box-shadow: inset -3px -4px 8px rgba(0,0,0,.28), 0 4px 10px rgba(0,0,0,.35);
+  font-weight: 700;
+}
+.celula.recente { transform: scale(1.18); }
+
+/* ---------- Rodapé ---------- */
+.rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 40px 20px;
+  flex-wrap: wrap;
+}
+#mensagemRodape {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--destaque);
+}
+.ganhador {
+  background: rgba(0,0,0,.28);
+  border-radius: 99px;
+  padding: 8px 18px;
+  font-size: .95rem;
+}
+.ganhador strong { color: var(--destaque); }
+
+/* ---------- Tela de espera entre rodadas ---------- */
+.tela-espera {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--primaria) 88%, #000);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  text-align: center;
+  padding: 30px;
+  z-index: 50;
+}
+.tela-espera[hidden] { display: none; }
+.tela-espera .bola.espera { width: min(30vh, 240px); }
+.tela-espera h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  color: var(--destaque);
+  text-shadow: 0 3px 0 rgba(0,0,0,.3);
+}
+.tela-espera p { font-size: 1.2rem; opacity: .85; max-width: 560px; }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 980px) {
+  .palco { grid-template-columns: 1fr; }
+  .bola.gigante { width: min(52vw, 300px); }
+  .numeros-coluna { grid-template-columns: repeat(8, 1fr); }
+  .letra-coluna { width: 44px; font-size: 1.4rem; }
+  .cabecalho, .palco, .rodape { padding-inline: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bola.animar { animation: none; }
+  .celula { transition: none; }
+}
+
+/* ---------- Confete de comemoração ---------- */
+.confetes {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  overflow: hidden;
+}
+.confetes span {
+  position: absolute;
+  top: -20px;
+  width: 12px;
+  height: 18px;
+  border-radius: 3px;
+  opacity: .95;
+  animation: cair linear forwards;
+}
+@keyframes cair {
+  0%   { transform: translateY(-30px) rotate(0); }
+  100% { transform: translateY(110vh) rotate(var(--gira, 540deg)); opacity: .8; }
+}
+
+/* ---------- Sorteio de desempate (embaralhamento) ---------- */
+.tela-espera h2.embaralhando {
+  opacity: .6;
+  filter: blur(1.5px);
+  transform: scale(.96);
+  transition: none;
+}
+.tela-espera h2.revelado {
+  animation: revelar-telao .6s cubic-bezier(.2, 1.4, .4, 1);
+}
+@keyframes revelar-telao {
+  0%   { transform: scale(.35); opacity: 0; }
+  55%  { transform: scale(1.18); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetes { display: none; }
+  .tela-espera h2.embaralhando { filter: none; transform: none; }
+  .tela-espera h2.revelado { animation: none; }
+}
+
+/* ---------- Botão de som ---------- */
+.btn-som {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 70;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 99px;
+  background: rgba(0,0,0,.35);
+  color: rgba(255,255,255,.85);
+  cursor: pointer;
+  opacity: .55;
+  transition: opacity .15s ease;
+}
+.btn-som:hover, .btn-som:focus-visible { opacity: 1; }
+.btn-som.ativo {
+  background: var(--destaque);
+  color: #3a2c00;
+  border-color: transparent;
+  opacity: .85;
+}
+
+/* ---------- Faixa da rodada extra ---------- */
+.faixa-extra {
+  text-align: center;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: clamp(.95rem, 2vw, 1.35rem);
+  letter-spacing: .14em;
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0,0,0,.35);
+  padding: 8px 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.3);
+  animation: brilhar-extra 2.4s ease-in-out infinite;
+}
+@keyframes brilhar-extra {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.22); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .faixa-extra { animation: none; }
+}
+
+/* ---------- Carrossel de ganhadores (abaixo das bolas) ---------- */
+.carrossel {
+  margin-top: 20px;
+  text-align: center;
+  background: rgba(0,0,0,.25);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 16px;
+  padding: 12px 16px 10px;
+}
+.carrossel .rotulo {
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  opacity: .7;
+}
+.carrossel-item {
+  min-height: 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  margin-top: 6px;
+  animation: entrar-item .5s ease;
+}
+.carrossel-item .nome {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--destaque);
+}
+.carrossel-item .detalhe { font-size: .88rem; opacity: .85; }
+@keyframes entrar-item {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.carrossel-pontos { display: flex; justify-content: center; gap: 6px; margin-top: 8px; }
+.carrossel-pontos span {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.3);
+}
+.carrossel-pontos span.ativo { background: var(--destaque); }
+
+/* ---------- Mini-cartela animada (tela de espera) ---------- */
+.mini-cartela {
+  background: #fffdf6;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.45);
+  animation: flutuar-cartela 3.4s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes flutuar-cartela {
+  0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+  50%      { transform: translateY(-14px) rotate(1.5deg); }
+}
+.mc-topo {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.mc-topo span {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  text-align: center;
+  color: #fff;
+  border-radius: 8px;
+  padding: 4px 0;
+}
+.mc-topo span:nth-child(1) { background: var(--col-b); }
+.mc-topo span:nth-child(2) { background: var(--col-i); }
+.mc-topo span:nth-child(3) { background: #b9b3a2; }
+.mc-topo span:nth-child(4) { background: var(--col-g); }
+.mc-topo span:nth-child(5) { background: var(--col-o); }
+.mc-grade {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.mc-grade span {
+  width: 52px; height: 46px;
+  display: grid; place-items: center;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #2c2c26;
+  background: #efe9d8;
+  border-radius: 8px;
+  animation: acender-celula 6s ease-in-out infinite;
+}
+.mc-grade span.mc-livre { color: var(--col-i); font-size: 1.35rem; }
+/* Cada célula "marca" em um momento diferente, em loop */
+.mc-grade span:nth-child(1)  { animation-delay: 0s; }
+.mc-grade span:nth-child(7)  { animation-delay: .5s; }
+.mc-grade span:nth-child(13) { animation-delay: 1s; }
+.mc-grade span:nth-child(9)  { animation-delay: 1.5s; }
+.mc-grade span:nth-child(5)  { animation-delay: 2s; }
+.mc-grade span:nth-child(11) { animation-delay: 2.5s; }
+.mc-grade span:nth-child(3)  { animation-delay: 3s; }
+.mc-grade span:nth-child(15) { animation-delay: 3.5s; }
+.mc-grade span:nth-child(6)  { animation-delay: 4s; }
+.mc-grade span:nth-child(10) { animation-delay: 4.5s; }
+@keyframes acender-celula {
+  0%, 55%, 100% { background: #efe9d8; color: #2c2c26; transform: scale(1); }
+  60%, 90% {
+    background: radial-gradient(circle, #fff 0 52%, var(--destaque) 53% 100%);
+    color: #111;
+    transform: scale(1.12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mini-cartela, .mc-grade span, .carrossel-item { animation: none; }
+}
+
+/* ---------- Toast: BINGO no meio da rodada ---------- */
+.toast-ganhador {
+  position: fixed;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 65;
+  background: rgba(8, 14, 10, .92);
+  border: 3px solid var(--destaque);
+  border-radius: 18px;
+  padding: 16px 34px;
+  text-align: center;
+  box-shadow: 0 18px 50px rgba(0,0,0,.55);
+  animation: toast-entra .5s cubic-bezier(.2, 1.4, .4, 1);
+  max-width: min(90vw, 900px);
+}
+.toast-ganhador .toast-titulo {
+  display: block;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 3.2vw, 2.4rem);
+  color: var(--destaque);
+  text-shadow: 0 2px 0 rgba(0,0,0,.4);
+}
+.toast-ganhador .toast-detalhe {
+  display: block;
+  font-size: clamp(.95rem, 1.8vw, 1.3rem);
+  color: #fff;
+  opacity: .92;
+  margin-top: 4px;
+}
+.toast-ganhador.saindo { animation: toast-sai .4s ease forwards; }
+@keyframes toast-entra {
+  from { opacity: 0; transform: translate(-50%, -30px) scale(.8); }
+  to   { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+@keyframes toast-sai {
+  to { opacity: 0; transform: translate(-50%, -20px) scale(.92); }
+}
+
+/* ---------- Layout para telões grandes (TV 65"+) ---------- */
+/* A coluna da bola vira altura cheia: o carrossel cresce e preenche
+   o espaço abaixo das bolas sorteadas, sem buracos em tela cheia */
+.palco { align-items: stretch; }
+.lado-bola { display: flex; flex-direction: column; justify-content: center; }
+.lado-painel { display: flex; flex-direction: column; }
+.lado-painel .carrossel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 130px;
+  margin-top: 26px;
+}
+.carrossel-item .nome { font-size: clamp(1.15rem, 2.4vh, 1.9rem); }
+.carrossel-item .detalhe { font-size: clamp(.88rem, 1.7vh, 1.25rem); }
+.carrossel .rotulo { font-size: clamp(.72rem, 1.2vh, .95rem); }
+@media (min-height: 900px) {
+  .fila-bolas .bola { width: clamp(62px, 8vh, 92px); }
+  .fila-bolas .bola .numero { font-size: clamp(1.35rem, 3vh, 2rem); }
+  .contagem { font-size: clamp(1.05rem, 2vh, 1.5rem); padding: 10px 24px; }
+  .legenda-bola { font-size: clamp(1rem, 1.8vh, 1.3rem); }
+  .celula { font-size: clamp(1rem, 2.4vh, 2rem); }
+  .letra-coluna { width: clamp(58px, 6.5vh, 84px); font-size: clamp(1.9rem, 3.6vh, 2.9rem); }
+  .carrossel-pontos span { width: 9px; height: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast-ganhador, .toast-ganhador.saindo { animation: none; }
+}
+
+/* ---------- Esteira contínua de patrocinadores ---------- */
+/* Ocupa todo o espaço abaixo do painel de números; as logos passam
+   da esquerda para a direita em velocidade constante e agradável */
+.faixa-patrocinadores {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 26px;
+  min-height: 150px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 18px;
+  padding: 14px 0 20px;
+  overflow: hidden;
+}
+.rotulo-patro {
+  text-align: center;
+  font-size: clamp(.72rem, 1.2vh, .95rem);
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  opacity: .7;
+  margin-bottom: 12px;
+}
+.janela-patro {
+  overflow: hidden;
+  width: 100%;
+  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+.trilho-patro {
+  display: flex;
+  align-items: center;
+  gap: clamp(28px, 4vw, 56px);
+  width: max-content;
+  padding-inline: 20px;
+  animation: rolar-patro linear infinite;
+}
+/* Da esquerda para a direita, em loop contínuo (sequência duplicada) */
+@keyframes rolar-patro {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+.logo-patro {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: clamp(10px, 1.8vh, 18px) clamp(22px, 3vw, 40px);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 26px rgba(0,0,0,.35);
+  flex-shrink: 0;
+}
+.logo-patro img {
+  display: block;
+  height: clamp(84px, 17vh, 170px);
+  max-width: min(38vw, 420px);
+  object-fit: contain;
+}
+@media (prefers-reduced-motion: reduce) {
+  .trilho-patro { animation: none; }
+}
+
+/* ============================================================
+   CORREÇÃO DE PROPORÇÃO (telões grandes)
+   O esticamento vertical (align-items: stretch) inflava as
+   células quadradas do painel. Estratégia nova: nada estica;
+   a faixa de patrocinadores tem altura própria e o painel tem
+   travas de tamanho que impedem qualquer explosão de layout.
+   ============================================================ */
+.palco { align-items: start; }
+.lado-bola { display: flex; flex-direction: column; justify-content: flex-start; min-width: 0; }
+.lado-painel { display: flex; flex-direction: column; min-width: 0; }
+
+/* Painel de números: tamanho sempre natural, nunca flexível */
+.lado-painel > .painel { flex: 0 0 auto; }
+.painel .linha-painel { flex: 0 0 auto; }
+.numeros-coluna { min-width: 0; }
+
+/* Travas de segurança: célula nunca passa de 96px, sempre redonda */
+.celula {
+  width: 100%;
+  max-width: 96px;
+  max-height: 96px;
+  min-width: 0;
+  justify-self: center;
+}
+.letra-coluna { align-self: stretch; max-height: 96px; }
+
+/* Faixa de patrocinadores: altura própria, generosa e proporcional
+   à tela - preenche o espaço sob o painel sem depender de stretch */
+.faixa-patrocinadores {
+  flex: 0 0 auto;
+  height: clamp(170px, 26vh, 300px);
+  min-height: 0;
+}
+.logo-patro img { height: clamp(84px, 15vh, 180px); }
+
+/* ---------- Conferência dos nomes antes do sorteio ---------- */
+.tela-disputa {
+  position: fixed;
+  inset: 0;
+  z-index: 58;
+  background: color-mix(in srgb, var(--primaria) 90%, #000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3vh 3vw;
+}
+.tela-disputa[hidden] { display: none; }
+.disputa-caixa {
+  width: 100%;
+  max-width: 1400px;
+  text-align: center;
+}
+.disputa-rotulo {
+  display: inline-block;
+  background: var(--destaque);
+  color: #3a2c00;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1rem, 2.2vh, 1.5rem);
+  letter-spacing: .1em;
+  padding: 6px 22px;
+  border-radius: 99px;
+  animation: pulsar-rotulo 1.8s ease-in-out infinite;
+}
+@keyframes pulsar-rotulo {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+.tela-disputa h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(1.8rem, 5vh, 3.4rem);
+  color: #fff;
+  text-shadow: 0 3px 0 rgba(0,0,0,.35);
+  margin: 14px 0 6px;
+}
+.disputa-premio {
+  font-size: clamp(1rem, 2.4vh, 1.6rem);
+  color: var(--destaque);
+  font-weight: 700;
+  margin-bottom: 22px;
+}
+.disputa-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(12px, 2vh, 22px);
+  max-height: 58vh;
+  overflow: hidden;
+}
+.disputa-nome {
+  background: #fffdf6;
+  color: #1f2420;
+  border-radius: 16px;
+  padding: clamp(12px, 2vh, 22px) 18px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.35);
+  animation: entrar-nome .45s cubic-bezier(.2, 1.3, .4, 1) backwards;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.disputa-nome .n {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.2rem, 3.2vh, 2.2rem);
+  line-height: 1.15;
+}
+.disputa-nome .c {
+  font-size: clamp(.85rem, 1.8vh, 1.15rem);
+  color: #6b7263;
+  font-weight: 700;
+}
+@keyframes entrar-nome {
+  from { opacity: 0; transform: translateY(16px) scale(.94); }
+  to   { opacity: 1; transform: none; }
+}
+.disputa-rodape {
+  margin-top: 22px;
+  font-size: clamp(.9rem, 1.9vh, 1.2rem);
+  color: rgba(255,255,255,.8);
+}
+@media (prefers-reduced-motion: reduce) {
+  .disputa-rotulo, .disputa-nome { animation: none; }
+}
